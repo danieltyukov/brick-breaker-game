@@ -1,14 +1,16 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Timer;
-import javax.swing.JPanel;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.*;
+import javax.swing.Timer;
 
 public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
   private boolean play = false;
   private int score = 0;
 
-  private int totalBricks = 21;
+  private int totalBricks = 48;
 
   private Timer timer;
   private int delay = 8;
@@ -18,7 +20,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
   private int ballposX = 120;
   private int ballposY = 350;
   private int ballXdir = -1;
-  private int ballYdir = -1;
+  private int ballYdir = -2;
 
   public Gameplay() {
     addKeyListener(this);
@@ -28,43 +30,62 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     timer.start();
   }
 
-  public void pain(Graphics g) {
+  public void paint(Graphics g) {
+    // background
     g.setColor(Color.black);
     g.fillRect(1, 1, 692, 592);
 
+    // borders
     g.setColor(Color.blue);
     g.fillRect(0, 0, 3, 592);
+    // g.fillRect(681, 0, 3, 592);
     g.fillRect(0, 0, 692, 3);
     g.fillRect(691, 0, 3, 592);
 
+    // pad
     g.setColor(Color.blue);
     g.fillRect(playerX, 550, 100, 8);
 
+    // oval
     g.setColor(Color.orange);
-    g.fillRect(ballposX, ballposY, 20, 20);
+    g.fillOval(ballposX, ballposY, 20, 20);
+
+    g.dispose();
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void keyTyped(KeyEvent e) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void keyPressed(KeyEvent e) {
-    // TODO Auto-generated method stub
-
+    if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+      if (playerX >= 600) {
+        playerX = 600;
+      } else {
+        moveRight();
+      }
+    }
+    if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+      if (playerX < 10) {
+        playerX = 10;
+      } else {
+        moveLeft();
+      }
+    }
   }
 
-  @Override
-  public void keyReleased(KeyEvent e) {
-    // TODO Auto-generated method stub
+  public void keyTyped(KeyEvent e) {}
 
+  public void keyReleased(KeyEvent e) {}
+
+  public void moveRight() {
+    play = true;
+    playerX += 20;
+  }
+
+  public void moveLeft() {
+    play = true;
+    playerX -= 20;
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    timer.start();
+    repaint();
   }
 }
