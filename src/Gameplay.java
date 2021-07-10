@@ -22,12 +22,13 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
   private int ballXdir = -1;
   private int ballYdir = -2;
 
+  private MapGenerator map;
+
   public Gameplay() {
+    map = new MapGenerator(4, 12);
     addKeyListener(this);
-    requestFocus();
     setFocusable(true);
     setFocusTraversalKeysEnabled(false);
-
     timer = new Timer(delay, this);
     timer.start();
   }
@@ -36,6 +37,9 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     // background
     g.setColor(Color.black);
     g.fillRect(1, 1, 692, 592);
+
+    // map
+    map.draw((Graphics2D) g);
 
     // borders
     g.setColor(Color.blue);
@@ -70,7 +74,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
       g.drawString("Press (Enter) to Restart", 230, 350);
     }
 
-    // when you lose the game
+    // lose
     if (ballposY > 570) {
       play = false;
       ballXdir = 0;
@@ -139,6 +143,18 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
       if (
         new Rectangle(ballposX, ballposY, 20, 20)
           .intersects(new Rectangle(playerX, 550, 30, 8))
+      ) {
+        ballYdir = -ballYdir;
+        ballXdir = -2;
+      } else if (
+        new Rectangle(ballposX, ballposY, 20, 20)
+          .intersects(new Rectangle(playerX + 70, 550, 30, 8))
+      ) {
+        ballYdir = -ballYdir;
+        ballXdir = ballXdir + 1;
+      } else if (
+        new Rectangle(ballposX, ballposY, 20, 20)
+          .intersects(new Rectangle(playerX + 30, 550, 40, 8))
       ) {
         ballYdir = -ballYdir;
       }
