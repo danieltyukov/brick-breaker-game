@@ -24,8 +24,10 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
   public Gameplay() {
     addKeyListener(this);
+    requestFocus();
     setFocusable(true);
     setFocusTraversalKeysEnabled(false);
+
     timer = new Timer(delay, this);
     timer.start();
   }
@@ -93,6 +95,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         moveRight();
       }
     }
+
     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
       if (playerX < 10) {
         playerX = 10;
@@ -100,11 +103,25 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
         moveLeft();
       }
     }
+    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+      if (!play) {
+        play = true;
+        ballposX = 120;
+        ballposY = 350;
+        ballXdir = -1;
+        ballYdir = -2;
+        playerX = 310;
+        score = 0;
+        totalBricks = 21;
+
+        repaint();
+      }
+    }
   }
 
-  public void keyTyped(KeyEvent e) {}
-
   public void keyReleased(KeyEvent e) {}
+
+  public void keyTyped(KeyEvent e) {}
 
   public void moveRight() {
     play = true;
@@ -118,14 +135,25 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
   public void actionPerformed(ActionEvent e) {
     timer.start();
-    if (ballposX < 0) {
-      ballXdir = -ballXdir;
-    }
-    if (ballposY < 0) {
-      ballYdir = -ballYdir;
-    }
-    if (ballposX > 670) {
-      ballXdir = -ballXdir;
+    if (play) {
+      if (
+        new Rectangle(ballposX, ballposY, 20, 20)
+          .intersects(new Rectangle(playerX, 550, 30, 8))
+      ) {
+        ballYdir = -ballYdir;
+      }
+
+      ballposX += ballXdir;
+      ballposY += ballYdir;
+      if (ballposX < 0) {
+        ballXdir = -ballXdir;
+      }
+      if (ballposY < 0) {
+        ballYdir = -ballYdir;
+      }
+      if (ballposX > 670) {
+        ballXdir = -ballXdir;
+      }
     }
     repaint();
   }
