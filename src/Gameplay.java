@@ -38,17 +38,49 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     // borders
     g.setColor(Color.blue);
     g.fillRect(0, 0, 3, 592);
-    // g.fillRect(681, 0, 3, 592);
     g.fillRect(0, 0, 692, 3);
     g.fillRect(691, 0, 3, 592);
+
+    // score
+    g.setColor(Color.white);
+    g.setFont(new Font("serif", Font.BOLD, 25));
+    g.drawString("" + score, 590, 30);
 
     // pad
     g.setColor(Color.blue);
     g.fillRect(playerX, 550, 100, 8);
 
-    // oval
+    // ball
     g.setColor(Color.orange);
     g.fillOval(ballposX, ballposY, 20, 20);
+
+    // win
+    if (totalBricks <= 0) {
+      play = false;
+      ballXdir = 0;
+      ballYdir = 0;
+      g.setColor(Color.RED);
+      g.setFont(new Font("serif", Font.BOLD, 30));
+      g.drawString("You Won", 260, 300);
+
+      g.setColor(Color.RED);
+      g.setFont(new Font("serif", Font.BOLD, 20));
+      g.drawString("Press (Enter) to Restart", 230, 350);
+    }
+
+    // when you lose the game
+    if (ballposY > 570) {
+      play = false;
+      ballXdir = 0;
+      ballYdir = 0;
+      g.setColor(Color.RED);
+      g.setFont(new Font("serif", Font.BOLD, 30));
+      g.drawString("Game Over, Scores: " + score, 190, 300);
+
+      g.setColor(Color.RED);
+      g.setFont(new Font("serif", Font.BOLD, 20));
+      g.drawString("Press (Enter) to Restart", 230, 350);
+    }
 
     g.dispose();
   }
@@ -86,6 +118,15 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
 
   public void actionPerformed(ActionEvent e) {
     timer.start();
+    if (ballposX < 0) {
+      ballXdir = -ballXdir;
+    }
+    if (ballposY < 0) {
+      ballYdir = -ballYdir;
+    }
+    if (ballposX > 670) {
+      ballXdir = -ballXdir;
+    }
     repaint();
   }
 }
