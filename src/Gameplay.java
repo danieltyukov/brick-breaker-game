@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
@@ -45,7 +43,7 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
     g.setColor(Color.blue);
     g.fillRect(0, 0, 3, 592);
     g.fillRect(0, 0, 692, 3);
-    g.fillRect(691, 0, 3, 592);
+    g.fillRect(681, 0, 3, 592);
 
     // score
     g.setColor(Color.white);
@@ -157,6 +155,43 @@ public class Gameplay extends JPanel implements KeyListener, ActionListener {
           .intersects(new Rectangle(playerX + 30, 550, 40, 8))
       ) {
         ballYdir = -ballYdir;
+      }
+
+      A:for (int i = 0; i < map.map.length; i++) {
+        for (int j = 0; j < map.map[0].length; j++) {
+          if (map.map[i][j] > 0) {
+            int brickX = j * map.brickWidth + 80;
+            int brickY = i * map.brickHeight + 50;
+            int brickWidth = map.brickWidth;
+            int brickHeight = map.brickHeight;
+
+            Rectangle rect = new Rectangle(
+              brickX,
+              brickY,
+              brickWidth,
+              brickHeight
+            );
+            Rectangle ballRect = new Rectangle(ballposX, ballposY, 20, 20);
+            Rectangle brickRect = rect;
+
+            if (ballRect.intersects(brickRect)) {
+              map.setBrickValue(0, i, j);
+              score += 5;
+              totalBricks--;
+
+              if (
+                ballposX + 19 <= brickRect.x ||
+                ballposX + 1 >= brickRect.x + brickRect.width
+              ) {
+                ballXdir = -ballXdir;
+              } else {
+                ballYdir = -ballYdir;
+              }
+
+              break A;
+            }
+          }
+        }
       }
 
       ballposX += ballXdir;
